@@ -36,3 +36,6 @@ CREATE TABLE public.sales as
                 ) as city -- ltrim se usa para eliminar espacio en blanco inicial y split para extraer la ciudad de la direccion
      FROM parsed
 ;
+
+
+
