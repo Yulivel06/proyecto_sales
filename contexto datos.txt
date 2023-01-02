@@ -1,0 +1,13 @@
+-Order ID- Un ID de pedido es el sistema numérico que Amazon utiliza exclusivamente para 
+realizar un seguimiento de los pedidos. Cada pedido recibe su propio ID de pedido que no 
+se duplicará. Este número puede ser útil para el vendedor cuando intenta averiguar ciertos 
+detalles sobre un pedido, como la fecha o el estado del envío.
+-Product- El producto que se ha vendido.
+-Quantity Ordered- Cantidad solicitada es la cantidad total de artículos solicitados en el pedido 
+inicial (sin ningún cambio).
+-Price Each- El precio de cada producto.
+-Order Date- Esta es la fecha en que el cliente solicita que se envíe el pedido.
+-Purchase Address- La orden de compra la prepara el comprador, a menudo a través de un departamento de compras. 
+La orden de compra, u orden de compra, generalmente incluye un número de orden de compra, que es útil para hacer 
+coincidir los envíos con las compras; una fecha de envío; Dirección de Envio; Dirección de envío; 
+y los artículos solicitados, cantidades y precio.
