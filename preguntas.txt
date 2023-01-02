@@ -1,0 +1,24 @@
+Objetivo
+Un análisis de mercado objetivo es una evaluación de cómo su producto o servicio encaja en un mercado específico y dónde se beneficiará más.
+
+Tarea:
+P: ¿Cuál fue el mejor año para las ventas? ¿Cuánto se ganó ese año?
+
+P: ¿Cuál fue el mejor mes para las ventas? ¿Cuánto se ganó ese mes?
+
+P: ¿Qué ciudad tuvo el mayor número de ventas?
+
+P: ¿A qué hora debemos mostrar la publicidad para maximizar la probabilidad de que el cliente compre el producto?
+
+P: ¿Qué productos se venden juntos con mayor frecuencia?
+
+P: ¿Qué producto se vendió más? ¿Por qué crees que vendió más?
+
+¿Cuánta probabilidad?
+¿Qué probabilidad hay de que las próximas personas soliciten el cable de carga USB-C?
+
+¿Cuánta probabilidad de que la próxima gente ordene un iPhone?
+
+¿Cuánta probabilidad de que la próxima gente ordene Google Phone?
+
+¿Cuánta probabilidad de que otras personas ordenen auriculares con cable?
