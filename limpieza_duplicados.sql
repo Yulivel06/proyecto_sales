@@ -10,7 +10,7 @@ FROM repeats
 WHERE  repeats > 1
 ORDER BY order_id;
 
---2 Teniendo en cuenta lo anterior procedomos a eliminar los duplicados de la siguiente manera:
+--2 Teniendo en cuenta lo anterior procedemos a eliminar los duplicados de la siguiente manera:
 --2.1. Agregar un id: Esto nos permite tener un identificador único para cada registro, seguidamente,
 -- creamos una tabla temporal para poder guardar nuestra tabla original "sales", esto con el
 -- objetivo de poder consultarla despues borrarla, lo hacemos así:
