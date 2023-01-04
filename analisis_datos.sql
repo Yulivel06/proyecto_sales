@@ -1,3 +1,18 @@
+-- Total ingresos
+
+SELECT SUM(quantity_ordered*price_each) as revenue_year
+FROM sales;
+
+--Total Ordenes
+SELECT
+     count (distinct (order_id)) AS total_orders
+FROM sales;
+
+--total Product sold
+SELECT
+    count(product) AS total_product_sold
+FROM sales;
+
 -- ¿Cual fue el mejor MES para ventas? ¿Cuanto se ganó por mes?
 
 SELECT
@@ -21,106 +36,77 @@ GROUP BY number_month, month;
 
 SELECT
     city,
+    name,
     count(order_id) AS num_order
 FROM sales
-GROUP BY city
+INNER JOIN estados_eeuu
+    USING (state)
+GROUP BY city, name
 ORDER BY  num_order DESC;
 
 --ciudad con mas ingresos
 
 SELECT
     city,
+    name,
     SUM(quantity_ordered*price_each) as revenue
 FROM sales
-GROUP BY city
+    INNER JOIN estados_eeuu
+    USING (state)
+GROUP BY city, name
 ORDER BY  revenue DESC;
 
+-- Estado con mas ingresos y % de ingresos
 
-SELECT *, count(*)
+WITH revenue_state as (
+    SELECT
+        name AS  state,
+        SUM(quantity_ordered*price_each) as revenue_state
+    FROM sales
+        INNER JOIN estados_eeuu
+        USING (state)
+    GROUP BY name)
+SELECT
+    state,
+    round(revenue_state/ (SELECT SUM(quantity_ordered*price_each) FROM sales),2) AS percentage
+FROM revenue_state
+ORDER BY percentage DESC
+;
+
+-- ¿A qué hora debemos mostrar la publicidad para maximizar la probabilidad de que el cliente compre el producto?
+
+SELECT
+    name,
+    city,
+    extract(hour FROM order_date) as hour,
+    count (distinct (order_id)) AS total_orders
+FROM sales
+INNER JOIN estados_eeuu
+    USING (state)
+GROUP BY order_id,hour , city, name
+ORDER BY total_orders;
+
+
+-- Product best seller
+
+SELECT product, sum(quantity_ordered) AS quantity
 from sales
-group by order_id, product, quantity_ordered, price_each, order_date, purchase_address, city, status
-order by count(*) DESC;
-
-
-WITH values_repeat as (
-    select *,
-    row_number() OVER (PARTITION BY order_id, product, quantity_ordered, price_each, order_date, purchase_address, city, status)  AS row_number
-    from sales
-    order by  order_id)
-select *
-from values_repeat
-where row_number > 1
-;
-
-create TABLE sales_prueba as (select*from sales);
-
-WITH values_repeat as (
-    select *,
-    row_number() OVER (PARTITION BY order_id, product, quantity_ordered, price_each, order_date, purchase_address, city, status)  AS row_number
-    from sales
-    order by  order_id)
-DELETE
-from values_repeat
-where row_number > 1;
-
-ALTER TABLE sales_prueba
-ADD COLUMN  uniqueness INTEGER;
-
-
-WITH values_repeat as (
-    select *,
-    row_number() OVER (PARTITION BY order_id, product, quantity_ordered, price_each, order_date, purchase_address, city, status)  AS row_number
-    from sales_prueba
-    order by  order_id)
-update sales_prueba as p
-set uniqueness=row_number
-from values_repeat as r
-WHERE p.id=r.id;
-
-
-create temporary  table pruebita_fin as (
-select
-    row_number() over () as id,
-    *
-from sales_prueba)
-;
-
-select * from pruebita_fin;
-
-DROP TABLE sales_prueba;
-
-create table sales_prueba as (
-    select * from pruebita_fin);
-
-select * from sales_prueba;
-
-with pruebita as (
-select
-    row_number() over () as idy,
-    *
-from sales_prueba)
-
-UPDATE sales_prueba
-set id=p.idy
-from pruebita as p
-;
-
-select *,
-    row_number() OVER (PARTITION BY order_id, product, quantity_ordered, price_each, order_date, purchase_address, city, status)  AS row_number
-    from sales_prueba;
+GROUP BY  product
+ORDER BY quantity DESC;
 
 
 
-delete
-from sales_prueba
-where uniqueness > 1
-;
 
 
-select count(*) as c
-from sales_prueba
-group by order_id, order_id, product, quantity_ordered, price_each, order_date, purchase_address, city, status
-having count(*) > 1;
+
+
+
+
+
+
+
+
+
 
 
 
