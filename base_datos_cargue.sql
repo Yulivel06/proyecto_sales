@@ -34,17 +34,11 @@ CREATE TABLE public.sales as
             order_id, product, quantity_ordered, price_each, order_date, purchase_address,
             ltrim (split_part(purchase_address, ',', 2), ' '
                 ) as city, -- ltrim se usa para eliminar espacio en blanco inicial y split para extraer la ciudad de la direccion
-            ltrim (split_part(purchase_address, ',', 3), ' '
+            ltrim (split_part( (split_part(purchase_address, ',', 3)), ' ',2), ' '
                 ) as status
      FROM parsed
 ;
 
-
--- Encontramos datos del año 2020, los cuales procedemos a eliminar
-
-DELETE
-FROM  sales
-WHERE extract (year from order_date) = '2020';
 
 -- Decidimos extraer los estados de la columna "purchase_addres" y crear la tabla estado
 
@@ -55,10 +49,9 @@ CREATE TABLE estados_eeuu AS (
             SELECT
                         DISTINCT (    split_part(status, ' ', 1))  AS estado,
                         NULL AS name
-            FROM sales_prueba
-            GROUP BY  sales_prueba.status);
+            FROM sales
+            GROUP BY  status);
 
-SELECT * FROM  estados_eeuu;
 
 
 
