@@ -3,7 +3,7 @@
 WITH repeats AS (
     SELECT *,
     ROW_NUMBER() OVER(PARTITION BY order_id, product, quantity_ordered,
-        price_each, order_date, purchase_address, city, status) AS repeats
+        price_each, order_date, purchase_address, city, state) AS repeats
     from sales)
 SELECT *
 FROM repeats
@@ -40,7 +40,7 @@ ADD COLUMN uniqueness INTEGER;
 WITH repeats  AS (
     SELECT *,
     ROW_NUMBER() OVER(PARTITION BY order_id, product, quantity_ordered,
-        price_each, order_date, purchase_address, city, status) AS repetitions
+        price_each, order_date, purchase_address, city, state) AS repetitions
     from sales)
 UPDATE sales AS s
 SET uniqueness=r.repetitions
@@ -53,6 +53,12 @@ DELETE
 FROM sales
 WHERE uniqueness > 1;
 
+
+-- Encontramos datos del año 2020, los cuales procedemos a eliminar
+
+DELETE
+FROM  sales
+WHERE extract (year from order_date) = '2020';
 
 
 
