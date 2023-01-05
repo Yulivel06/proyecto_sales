@@ -13,10 +13,16 @@ SELECT
     count(product) AS total_product_sold
 FROM sales;
 
--- promedio por orden
+-- promedio productos por orden
 
--- total productos
-
+ with product_order AS
+     (SELECT order_id,
+     count(product) as product_order
+     FROM sales
+     GROUP BY order_id)
+SELECT sum(product_order)/ (select count ( distinct order_id) from sales)
+FROM product_order
+;
 
 -- ¿Cual fue el mejor MES para ventas? ¿Cuanto se ganó por mes?
 
@@ -39,16 +45,16 @@ FROM revenue_month;
 SELECT
     to_char(order_date, 'month') AS month,      -- To_chart extrae el nombre del mes del año
     to_char(order_date, 'MM') AS number_month,
-    COUNT(order_id) AS num_order_month
+    COUNT(distinct(order_id)) AS num_order_month
 FROM sales
 GROUP BY number_month, month;
+
 
 --Ciudad con mayor numero de ventas (ordenes)
 
 SELECT
-    city,
-    name,
-    count(order_id) AS num_order
+    concat(city,', ', name) as city,
+    count(distinct order_id) AS num_order
 FROM sales
 INNER JOIN estados_eeuu
     USING (state)
@@ -79,7 +85,7 @@ WITH revenue_state as (
 SELECT
     concat(city,', ', state) as city,
     round(revenue_state/ (SELECT SUM(quantity_ordered*price_each) FROM sales),2) AS percentage,
-    revenue_state
+    revenue_state,
 FROM revenue_state
 ORDER BY percentage DESC
 ;
@@ -87,27 +93,13 @@ ORDER BY percentage DESC
 -- ¿A qué hora debemos mostrar la publicidad para maximizar la probabilidad de que el cliente compre el producto?
 
 SELECT
-    name,
-    city,
+    concat(city,', ', name) as city,
     extract(hour FROM order_date) as hour,
     count (distinct (order_id)) AS total_orders
 FROM sales
 INNER JOIN estados_eeuu
     USING (state)
-GROUP BY order_id,hour , city, name
-ORDER BY total_orders;
-
--- dia con mas ordenes
-
-SELECT
-    name,
-    to_char(order_date, 'day') AS name_day,
-	date_part('dow', order_date) as num_day,
-    count (distinct (order_id)) AS total_orders
-FROM sales
-INNER JOIN estados_eeuu
-    USING (state)
-GROUP BY order_id, name, num_day, name_day
+GROUP BY hour, city,name
 ORDER BY total_orders;
 
 
@@ -157,7 +149,31 @@ group by product
 ;
 
 
-select*from sales;
+WITH category AS (SELECT product,
+                         quantity_ordered,
+                         CASE
+                             WHEN product LIKE ('%Batteries%') THEN 'Batteries'
+                             WHEN product LIKE ('%Charging Cable%') THEN 'Charging Cable'
+                             WHEN product LIKE ('%Headphones%') THEN 'Headphones'
+                             WHEN product LIKE ('%Monitor%') THEN 'Monitor'
+                             WHEN product LIKE ('%TV%') THEN 'TV'
+                             WHEN product LIKE ('%Phone') THEN 'Phone'
+                             WHEN product LIKE ('%Laptop%') THEN 'Laptop'
+                             WHEN product LIKE ('%Washing Machine%') or product LIKE ('%Dryer%') THEN 'Washer or Dryer'
+                             END as category
+                  from sales)
+SELECT category, sum(quantity_ordered) as quantity_sold
+FROM category
+GROUP BY category
+;
+
+
+
+select distinct product
+from sales
+where product like ('%Phone')
+;
+--Numero de ingresos y ordenes por categoria
 
 
 
