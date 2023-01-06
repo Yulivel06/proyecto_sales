@@ -93,24 +93,34 @@ ORDER BY percentage DESC
 -- ¿A qué hora debemos mostrar la publicidad para maximizar la probabilidad de que el cliente compre el producto?
 
 SELECT
-    concat(city,', ', name) as city,
-    extract(hour FROM order_date) as hour,
-    count (distinct (order_id)) AS total_orders
-FROM sales
-INNER JOIN estados_eeuu
+    concat(s.city,', ', ee.name) as city,
+    EXTRACT(hour from order_date ) as hour,
+    count (distinct (s.order_id)) AS total_orders
+FROM sales AS s
+INNER JOIN estados_eeuu AS ee
     USING (state)
-GROUP BY hour, city,name
-ORDER BY total_orders;
+GROUP BY hour, s.city, ee.name
+ORDER BY city, total_orders
+ DESC;
+
+SELECT
+FROM hour_peak;
+
+select order_date
+from sales
+group by order_date
+order by order_date DESC
+limit 1;
 
 
 -- Product best seller
 
 SELECT product,
-           sum(quantity_ordered*price_each) AS revenue,
-           sum(quantity_ordered) AS quantity,
-           price_each
+       sum(quantity_ordered * price_each) AS revenue,
+       sum(quantity_ordered)              AS quantity,
+       price_each
 FROM sales
-GROUP BY  product, price_each
+GROUP BY product, price_each
 ORDER BY quantity DESC;
 
 
