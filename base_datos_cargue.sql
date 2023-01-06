@@ -40,6 +40,10 @@ CREATE TABLE public.sales as
 ;
 
 
+ALTER TABLE sales
+ALTER order_date type TIMESTAMP WITH TIME ZONE
+USING to_timestamp(order_date) AT TIME ZONE 'America/New_York';
+
 -- Decidimos extraer los estados de la columna "purchase_addres" y crear la tabla estado
 
 --Para esto:
