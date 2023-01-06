@@ -5,7 +5,7 @@ FROM sales;
 
 --Total Ordenes
 SELECT
-     count (distinct (order_id)) AS total_orders
+     count (distinct (order_id)) AS total_orders --usamos distinct debido a que una orden puede tener varios productos
 FROM sales;
 
 --total Product sold
@@ -15,7 +15,7 @@ FROM sales;
 
 -- promedio productos por orden
 
- with product_order AS
+WITH product_order AS
      (SELECT order_id,
      count(product) as product_order
      FROM sales
@@ -50,7 +50,7 @@ FROM sales
 GROUP BY number_month, month;
 
 
---Ciudad con mayor numero de ventas (ordenes)
+--Ciudad con mayor número de ventas (ordenes)
 
 SELECT
     concat(city,', ', name) as city,
