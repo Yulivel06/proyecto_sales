@@ -32,3 +32,66 @@ Nos proporcionan una serie de preguntas que nos ayuda analizar los datos. Puede 
  -   PostgreSQL (Análisis exploratorio de datos)
 -   Power BI (visualización de datos)
 
+## ETL 
+El primero paso es realizar un proceso de ETL (Extracción, transformación y cargue de nuestros datos). 
+Para esto: 
+
+ 1. Creamos un schema donde guardamos nuestros datos crudos (sin procesar).
+ ** nota: schema es una conjunto de tablas
+ 
+ ``` sql
+ create schema raw;
+ ```
+
+2. Seguidamente procedemos a crear una tabla (para este caso solo fue necesario una) debido a que tenemos 12 archivos que tienen las mismas columnas. 
+
+ ``` sql
+ CREATE TABLE raw.sales (  
+    order_id VARCHAR,  
+  product varchar,  
+  quantity_ordered VARCHAR,  
+  price_each VARCHAR,  
+  order_date VARCHAR,  
+  purchase_address VARCHAR  
+);  
+``` 
+
+3.  Ahora, es momento de crear un schema que tenga nuestros datos transformados y limpios para poder analizar. 
+ **Recuerda: Si Entra Basura, Sale Basura**
+ 
+Explorando los datos nos dimos cuenta que existían valores nulos, ademas que los encabezados se repetian en varios registros, asi que procedimos a eliminar estos registros.
+Para esto creamos un nuevo schema que almacenara la información limpia (por defecto en postgres utilizamos una llamada "public". 
+
+ 3.1. Creamos una nueva tabla en public (sin registros y sin los encabezados repetidos) 
+ CREATE TABLE public.sales as  
+  
+   ``` sql
+ WITH filtered as (SELECT order_id, product, quantity_ordered, price_each, order_date, purchase_address -- tabla con valores no nulos y diferente a string  
+  from raw.sales  
+                       WHERE order_id IS NOT NULL AND order_id !='Order ID' ),  
+  parsed AS (SELECT order_id::INTEGER                            AS order_id, -- asignamos los tipos de datos para cada columna  
+  product,  
+  quantity_ordered::INTEGER                    as quantity_ordered,  
+  price_each::decimal                          AS price_each,  
+  to_timestamp(order_date, 'MM/DD/YY HH24:MI') AS order_date,  
+  purchase_address  
+  FROM filtered)  
+     SELECT  
+  order_id, product, quantity_ordered, price_each, order_date, purchase_address,  
+  ltrim (split_part(purchase_address, ',', 2), ' '  
+  ) as city, -- ltrim se usa para eliminar espacio en blanco inicial y split para extraer la ciudad de la direccion  
+  ltrim (split_part( (split_part(purchase_address, ',', 3)), ' ',2), ' '  
+  ) as status  
+     FROM parsed  
+;
+```
+
+Posteriormente decidimos extrar los estados de la columna "purchase_addres" y crear una tabla con lo estados de Estados Unidos que se encontraban en el conjunto de datos. 
+   ``` sql
+   CREATE TABLE estados_eeuu AS (  
+            SELECT  
+ DISTINCT (    split_part(status, ' ', 1))  AS estado,  
+ NULL AS name FROM sales  
+            GROUP BY status);
+ ```
+ 
