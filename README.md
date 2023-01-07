@@ -1,6 +1,6 @@
 # Reporte ventas de productos- 2019 - resultado final 
 
-![enter image description here](https://github.com/Yulivel06/proyecto_sales/blob/master/reporte.pdf)
+![enter image description here](https://github.com/Yulivel06/proyecto_sales/blob/master/reporte_sales.jpg)
 > 
 # Datos de productos de venta
 
@@ -111,7 +111,7 @@ FROM repeats
 WHERE repeats > 1  
 ORDER BY order_id
  ```
- :open_mouth: Encontramos datos suplicados, asi que procedemos a eliminarlos de la siguiente manera: 
+ :open_mouth: Encontramos datos duplicados, asi que procedemos a eliminarlos de la siguiente manera: 
 -  
 1. Agregar un id: Esto nos permite tener un identificador único para cada registro
 2.  seguidamente,  creamos una tabla temporal para poder guardar nuestra tabla original "sales", esto con el  objetivo de poder consultarla despues borrarla, lo hacemos así:  
