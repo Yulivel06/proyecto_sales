@@ -95,3 +95,91 @@ Posteriormente decidimos extrar los estados de la columna "purchase_addres" y cr
             GROUP BY status);
  ```
  
+ Puedes consultar estas consultas en este  [archivo](https://github.com/Yulivel06/proyecto_sales/blob/master/base_datos_cargue.sql)
+
+**Seguimos limpiando los datos**
+
+Continuamos explorando nuestro datos para verificar si existen duplicados, asi que ejecutamos la siguiente consulta. 
+``` sql
+WITH repeats AS (  
+    SELECT *,  
+  ROW_NUMBER() OVER(PARTITION BY order_id, product, quantity_ordered,  
+  price_each, order_date, purchase_address, city, state) AS repeats  
+    from sales)  
+SELECT *  
+FROM repeats  
+WHERE repeats > 1  
+ORDER BY order_id
+ ```
+ :open_mouth: Encontramos datos suplicados, asi que procedemos a eliminarlos de la siguiente manera: 
+-  
+1. Agregar un id: Esto nos permite tener un identificador único para cada registro
+2.  seguidamente,  creamos una tabla temporal para poder guardar nuestra tabla original "sales", esto con el  objetivo de poder consultarla despues borrarla, lo hacemos así:  
+  ``` sql
+CREATE TEMPORARY TABLE table_temporary AS (  
+SELECT  
+  row_number() over () AS id,
+  *  
+FROM sales);  
+  ```
+  
+-- 2.2 Borrar y crear la tabla a partir de la tabla temporal creada anteriormente
+  
+   ``` sql
+DROP TABLE sales;  
+   ```
+     
+   ```sql 
+CREATE TABLE sales AS (  
+    SELECT * FROM table_temporary  
+);  
+   ```
+  
+-- 2.3 Crear una columna que nos permita conocer cual es el número de iteración (veces que se repite) de cada registro,  
+--Para nuestro caso la llamamos "uniqueness"  
+  ```sql 
+ALTER TABLE sales  
+ADD COLUMN uniqueness INTEGER;  
+   ```
+2.4 Agremamos valores a la columna uniqueness con row number  
+  ```sql 
+WITH repeats  AS (  
+    SELECT *,  
+  ROW_NUMBER() OVER(PARTITION BY order_id, product, quantity_ordered,  
+  price_each, order_date, purchase_address, city, state) AS repetitions  
+    from sales)  
+UPDATE sales AS s  
+SET uniqueness=r.repetitions  
+FROM repeats AS r  
+WHERE s.id=r.id; -- cruzamos con id que es identificador  
+  ```
+  
+--2.5 Identificar los duplicados y eliminamos  
+   ```sql 
+DELETE  
+FROM sales  
+WHERE uniqueness > 1;  
+   ```
+  
+Por último,  encontramos datos del año 2020, los cuales procedemos a eliminar  
+   ```sql 
+DELETE  
+FROM sales  
+WHERE extract (year from order_date) = '2020';
+ ```
+y así finaliza nuestra limpieza, puedes descargar el archivo con las consultas anteriores [Aquí](https://github.com/Yulivel06/proyecto_sales/blob/master/limpieza_duplicados.sql).
+
+## Es hora de analizar nuestros datos :mag_right:
+
+Puedes conocer el archivo con todas las consultas [Aquí](https://github.com/Yulivel06/proyecto_sales/blob/master/analisis_datos.sql)
+
+Una vez analizamos nuestros datos, es hora de visualizarlos para que sea mas facil comprender que nos estan diciendo .
+
+## Visualizacion de datos
+ 
+Para visualizar nuestros, utilizamos la herramienta Power Bi, para esto: 
+
+1. exporta cada una de las consultas realizadas a power Bi 
+2.  Escoge los gráficos que mejor permiten visualizar la información. 
+
+ 
