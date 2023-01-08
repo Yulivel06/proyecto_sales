@@ -20,7 +20,7 @@ CREATE TABLE raw.sales (
 
 CREATE TABLE public.sales as
 
-    WITH filtered as (SELECT order_id, product, quantity_ordered, price_each, order_date, purchase_address -- tabla con valores no nulos y diferente a string
+    WITH filtered as (SELECT order_id, product, quantity_ordered, price_each, order_date, purchase_address -- tabla con valores no nulos y sin encabezados repetidos
                        from raw.sales
                        WHERE order_id IS NOT NULL AND order_id !='Order ID' ),
           parsed AS (SELECT order_id::INTEGER                            AS order_id,  -- asignamos los tipos de datos para cada columna
@@ -40,9 +40,6 @@ CREATE TABLE public.sales as
 ;
 
 
-ALTER TABLE sales
-ALTER order_date type TIMESTAMP WITH TIME ZONE
-USING to_timestamp(order_date) AT TIME ZONE 'America/New_York';
 
 -- Decidimos extraer los estados de la columna "purchase_addres" y crear la tabla estado
 
