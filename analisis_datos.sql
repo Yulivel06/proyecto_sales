@@ -158,6 +158,7 @@ where product = 'Wired Headphones'
 group by product
 ;
 
+-- Numero de ingresos y ordenes por categoria
 
 WITH category AS (SELECT product,
                          quantity_ordered,
@@ -178,12 +179,15 @@ GROUP BY category
 ;
 
 
+SELECT
+    name, count(distinct city)
+FROM sales AS s
+INNER JOIN estados_eeuu AS ee
+    USING (state)
+GROUP BY  ee.name
 
-select distinct product
-from sales
-where product like ('%Phone')
-;
---Numero de ingresos y ordenes por categoria
+
+
 
 
 
