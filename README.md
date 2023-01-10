@@ -66,17 +66,26 @@ Para esto creamos un nuevo schema que almacenara la información limpia (por def
  CREATE TABLE public.sales as  
   
    ``` sql
- WITH filtered as (SELECT order_id, product, quantity_ordered, price_each, order_date, purchase_address -- tabla con valores no nulos y diferente a string  
-  from raw.sales  
-                       WHERE order_id IS NOT NULL AND order_id !='Order ID' ),  
-  parsed AS (SELECT order_id::INTEGER                            AS order_id, -- asignamos los tipos de datos para cada columna  
-  product,  
-  quantity_ordered::INTEGER                    as quantity_ordered,  
-  price_each::decimal                          AS price_each,  
-  to_timestamp(order_date, 'MM/DD/YY HH24:MI') AS order_date,  
-  purchase_address  
-  FROM filtered)  
-     SELECT  
+ WITH filtered as (
+   SELECT 
+        order_id, 
+        product, 
+        quantity_ordered, 
+        price_each, order_date, 
+        purchase_address -- tabla con valores no nulos y diferente a string  
+   FROM raw.sales  
+   WHERE order_id IS NOT NULL AND order_id !='Order ID' 
+   ),  
+  parsed AS (
+             SELECT order_id::INTEGER                     AS order_id, -- asignamos los tipos de datos para cada columna  
+             product,  
+             quantity_ordered::INTEGER                    AS quantity_ordered,  
+             price_each::decimal                          AS price_each,  
+             to_timestamp(order_date, 'MM/DD/YY HH24:MI') AS order_date,  
+             purchase_address  
+  FROM filtered
+  )  
+  SELECT  
   order_id, product, quantity_ordered, price_each, order_date, purchase_address,  
   ltrim (split_part(purchase_address, ',', 2), ' '  
   ) as city, -- ltrim se usa para eliminar espacio en blanco inicial y split para extraer la ciudad de la direccion  
