@@ -57,9 +57,10 @@ Para esto:
 ``` 
 
 3.  Ahora, es momento de crear un schema que tenga nuestros datos transformados y limpios para poder analizar. 
+
  **Recuerda: Si Entra Basura, Sale Basura**
  
-Explorando los datos nos dimos cuenta que existían valores nulos, ademas que los encabezados se repetian en varios registros, asi que procedimos a eliminar estos registros.
+Explorando los datos nos dimos cuenta que existían valores nulos, además que los encabezados se repetian en varios registros, asi que procedimos a eliminar estos registros.
 Para esto creamos un nuevo schema que almacenara la información limpia (por defecto en postgres utilizamos una llamada "public". 
 
  3.1. Creamos una nueva tabla en public (sin registros y sin los encabezados repetidos) 
@@ -123,6 +124,7 @@ ORDER BY order_id
  :open_mouth: Encontramos datos duplicados, asi que procedemos a eliminarlos de la siguiente manera: 
 -  
 1. Agregar un id: Esto nos permite tener un identificador único para cada registro
+
 2.  seguidamente,  creamos una tabla temporal para poder guardar nuestra tabla original "sales", esto con el  objetivo de poder consultarla despues borrarla, lo hacemos así:  
   ``` sql
 CREATE TEMPORARY TABLE table_temporary AS (  
@@ -179,7 +181,7 @@ WHERE extract (year from order_date) = '2020';
 y así finaliza nuestra limpieza, puedes descargar el archivo con las consultas anteriores [Aquí](https://github.com/Yulivel06/proyecto_sales/blob/master/limpieza_duplicados.sql).
 
 ## Es hora de analizar nuestros datos :mag_right:
-
+Es el momento donde debemos preguntar que problema queremos resolver 
 Puedes conocer el archivo con todas las consultas [Aquí](https://github.com/Yulivel06/proyecto_sales/blob/master/analisis_datos.sql)
 
 Una vez analizamos nuestros datos, es hora de visualizarlos para que sea mas facil comprender que nos estan diciendo .
