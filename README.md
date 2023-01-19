@@ -6,7 +6,7 @@
 
 ### Contexto 
 
-En este reporte se analizan datos sobre venta de productos electrónicos, en diferente estados de Estados Unidos. Esto nos brindó informacion sobre los productos mas y menos vendidos, así como los que generaron mayores ingresos, tambien se visualizo horarios picos y ciudades mayor cantidad de pedidos. 
+En este reporte se analizaron datos sobre venta de productos electrónicos, en diferente estados de Estados Unidos. Esto nos brindó informacion sobre los productos más y menos vendidos, así como los que generaron mayores ingresos; tambien se visualizaron los horarios picos y ciudades mayor cantidad de pedidos. 
 Esto nos permite obtener información de valor para la toma de decisiones, permitiendo así, establecer objetivos, pronosticar ventas, lanzar campañas de marketing entre otros. 
 
 ### Información sobre el conjunto de datos 
