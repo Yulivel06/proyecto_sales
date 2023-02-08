@@ -87,12 +87,17 @@ Para esto creamos un nuevo schema que almacenara la información limpia (por def
   FROM filtered
   )  
   SELECT  
-  order_id, product, quantity_ordered, price_each, order_date, purchase_address,  
-  ltrim (split_part(purchase_address, ',', 2), ' '  
-  ) as city, -- ltrim se usa para eliminar espacio en blanco inicial y split para extraer la ciudad de la direccion  
-  ltrim (split_part( (split_part(purchase_address, ',', 3)), ' ',2), ' '  
-  ) as status  
-     FROM parsed  
+    order_id, 
+    product, 
+    quantity_ordered, 
+    price_each, 
+    order_date, 
+    purchase_address,  
+    ltrim (split_part(purchase_address, ',', 2), ' '  
+    ) as city, -- ltrim se usa para eliminar espacio en blanco inicial y split para extraer la ciudad de la direccion  
+    ltrim (split_part( (split_part(purchase_address, ',', 3)), ' ',2), ' '  
+    ) as status  
+  FROM parsed  
 ;
 ```
 
